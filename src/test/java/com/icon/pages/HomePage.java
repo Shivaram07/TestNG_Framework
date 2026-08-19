@@ -17,6 +17,19 @@ public class HomePage {
     private By mobiles = By.xpath("//div[@class = 'dropdown']//a[normalize-space()='Mobiles']");
     private Actions actions;
     private By doubleClick = By.xpath("//button[contains(text(), 'Copy Text')]");
+    private By datePicker1 = By.id("datepicker");
+
+    private By datePickerMonth =
+            By.xpath("//span[@class='ui-datepicker-month']");
+
+    private By datePickerYear =
+            By.xpath("//span[@class='ui-datepicker-year']");
+
+    private By nextMonth =
+            By.xpath("//span[contains(text() ,'Next')]");
+
+    private By previousMonth =
+            By.xpath("//span[contains(text() ,'Prev')]");
 
     public HomePage(WebDriver driver) {
         this.driver = driver;
@@ -63,6 +76,82 @@ public class HomePage {
              System.out.println("Mobile is present");
        return driver.findElement(mobiles).isDisplayed();
        
+   }
+   private By getDate(String day) {
+       return By.xpath(
+               "//table[contains(@class,'ui-datepicker-calendar')]" +
+               "//a[normalize-space()='" + day + "']"
+       );
+   }
+
+   public void selectDate(String month, String year, String day) {
+
+       driver.findElement(datePicker1).click();
+
+       int targetMonth = getMonthNumber(month);
+       int targetYear = Integer.parseInt(year);
+
+       while (true) {
+
+           String currentMonth =
+                   driver.findElement(datePickerMonth).getText();
+
+           String currentYear =
+                   driver.findElement(datePickerYear).getText();
+
+           int currentMonthNumber =
+                   getMonthNumber(currentMonth);
+           int currentYearNumber =
+                   Integer.parseInt(currentYear);
+
+           if (currentMonthNumber == targetMonth
+                   && currentYearNumber == targetYear) {
+               break;
+           }
+
+           if (currentYearNumber < targetYear
+                   || (currentYearNumber == targetYear
+                   && currentMonthNumber < targetMonth)) {
+
+               driver.findElement(nextMonth).click();
+
+           } else {
+
+               driver.findElement(previousMonth).click();
+           }
+       }
+
+       driver.findElement(getDate(day)).click();
+   }
+
+   private int getMonthNumber(String month)
+   {
+
+       switch (month.toLowerCase()) {
+
+       case "january": return 1;
+       case "february": return 2;
+       case "march": return 3;
+       case "april": return 4;
+       case "may": return 5;
+       case "june": return 6;
+       case "july": return 7;
+       case "august": return 8;
+       case "september": return 9;
+       case "october": return 10;
+       case "november": return 11;
+       case "december": return 12;
+
+       default:
+           throw new IllegalArgumentException(
+                   "Invalid month: " + month
+        		   );
+       }
+   }
+
+   public String getSelectedDate() {
+       return driver.findElement(datePicker1)
+               .getAttribute("value");
    }
    
    

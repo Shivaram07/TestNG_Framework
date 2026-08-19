@@ -59,5 +59,48 @@ public class HomePageTest extends Base {
                 "No mobile is found"
         );
     }
+    @Test
+    public void verifyDatePickerFutureMonth() {
+
+        HomePage homePage = new HomePage(driver);
+
+        homePage.selectDate(
+                "December",
+                "2026",
+                "25"
+        );
+
+        String actualDate = homePage.getSelectedDate();
+
+        String expectedDate = "12/25/2026";
+
+        Assert.assertEquals(
+                actualDate,
+                expectedDate,
+                "Future month date was not selected correctly"
+        );
+    }
+
+    @Test
+    public void verifyDatePickerPreviousMonth() {
+
+        HomePage homePage = new HomePage(driver);
+
+        homePage.selectDate(
+                "July",
+                "2026",
+                "15"
+        );
+
+        String actualDate = homePage.getSelectedDate();
+
+        String expectedDate = "07/15/2026";
+
+        Assert.assertEquals(
+                actualDate,
+                expectedDate,
+                "Previous month date was not selected correctly"
+        );
+    }
 
 }
